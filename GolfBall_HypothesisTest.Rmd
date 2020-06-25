@@ -11,9 +11,13 @@ The Par Inc. wants to compare the driving distances between the new golf balls (
 ## Assumptions
 
 Following assumptions had been made for driving the insights:
+
 •	The sample size is 40 (>30). Hence as per Centeral Limit Theorem, the sampling distribution of the mean will approach a normal distribution as the size of the sample increases and becomes large (>30). So it can be assumed, Population distribution is normal.
+
 •	Observations are independent.
+
 •	Population standard deviation or the variance is same in both samples.
+
 •	Level of significance (α) = 0.05, as no specific level of significance has been provided.
 
 ```{r echo=FALSE}
@@ -45,4 +49,131 @@ Following had been observed for the provided data:
 ```{r}
 sum(is.na(golf))
 ```
+
+• No Missing values found
+
+# Dataset Summary
+
+```{r}
+summary(golf)
+```
+
+# Standard Deviation
+```{r}
+sd(Current)
+```
+```{r}
+sd(New)
+```
+
+# Variation
+
+```{r}
+var(Current)
+```
+```{r}
+var(New)
+```
+
+# Data Visualization
+
+```{r}
+boxplot(Current, horizontal = TRUE, xlab = "Box plot for Current", col = "blue")
+```
+```{r}
+boxplot(New,horizontal = TRUE, xlab = "Box plot for New", col = "green")
+```
+```{r}
+hist(Current, xlab = "Histogram for Current", col = "blue")
+```
+```{r}
+hist(New,xlab = "Histogram for New", col = "green")
+```
+
+• Current: The minimum value is 255 yards and the maximum value is 289 yards. The average value is 270.3 yards
+
+• New: The minimum value is 250 yards and the maximum value is 289 yards. The average value is 267.5 yards
+
+It can be noticed that the differnce between the mean and median of the current and new golf balls is not big and there are no outliers (extreme small or big values).  
+
+The distribution of the new golf balls is right skewed. This indicates, the new golf balls covered shorter distances more and few large distances. The new balls also have a high variation as compared to current balls.
+
+## Hypothesis
+
+• Null hypothesis; H0: µCurrent = µNew (there is no difference in performance)
+
+• Alternate Hypothesis; Ha:  µCurrent != µNew (there is difference in performance)
+
+Where,
+
+• µCurrent: Mean driving distance of current model golf ball
+
+• µNew: Mean driving distance of new golf ball
+
+As the indicated test is between two independent samples, we shall perform two-tailed T-test.
+
+# Two Sample T-Test
+```{r}
+t.test(Current,New,paired = FALSE, var.equal = TRUE)
+```
+
+Since it is a two-tailed test, the p-value = 0.188 ÷ 2 = 0.094.
+
+P-value (probability value from t-test) is 0.094, which more than that assumed level of significance (α) of 0.05. Hence, we fail to reject the null hypothesis H0.
+
+# Conclusion
+The Par Inc. should take the new golf balls in production as the p-value indicate that there is no significant difference between estimated population mean of current as well as new golf balls.
+
+## Confidence Interval
+
+# Analysis of Current Balls
+
+```{r}
+t.test(Current)
+```
+
+# Analysis of New Balls
+
+```{r}
+t.test(New)
+```
+
+•	With 95% confidence, we can say that the difference between the means of the two population will be within the range of [-1.38, 6.93]
+
+•	With 95% confidence, we can say that the sample mean driving distance of current balls will be within the range of [267.48, 273.07] 
+
+•	With 95% confidence, we can say that the sample mean driving distance of new balls will be within the range of [264.33, 270.66]
+
+## Need of Larger Sample Size
+
+To find the need for larger sample size, we shall perfrom PoWER of T-TEST. In case, Power of T-Test is insignificant, we shall calculate the sample number.
+
+```{r}
+diff_mean = abs(mean(Current) - mean(New))
+
+pooled_sd = sqrt((((length(Current)-1)*sd(Current)^2)+((length(New)-1)*sd(New)^2))/(length(Current)+length(New)-2))
+
+power.t.test(n=40, delta = diff_mean, sd = pooled_sd,
+             sig.level = 0.05, type = "two.sample",
+             alternative = "two.sided")
+```
+
+The Power of test is 0.258 or 25.8%. This means, the probability of correctly rejecting the null hypothesis (when the alternate hypothesis is true), is only 25%. Hence we need to revisit the number of samples to increase the power of test.
+
+# Recalculate Sample size using Power T Test
+
+Calculating the Power Test considering:
+
+* Power of Test to be 95%
+
+* Significane level to be 0.188 as per the p-value calcuated in two sample T-Test.
+
+```{r}
+power.t.test(power=0.95, delta = diff_mean, sd=pooled_sd ,
+             sig.level = 0.188,type = "two.sample", 
+             alternative = "two.sided" )
+```
+
+Hence, we need sample size of approx. 200 in order to get 95% power of Test.
+
 
