@@ -1,0 +1,48 @@
+---
+title: "GolfBall_HypothesisTest"
+author: "Abhishek Kishore"
+date: "25/06/2020"
+output: github_document
+---
+
+## Objective
+The Par Inc. wants to compare the driving distances between the new golf balls (new longer lasting balls with cut-resistance coating) and current balls. To do this comparision, 40 balls of both the new and current models were subjected to distance tests. The testing was performed with a mechanical hitting machine so that any difference between the mean distances for the two models could be attributed to a difference in the design.
+
+## Assumptions
+
+Following assumptions had been made for driving the insights:
+•	The sample size is 40 (>30). Hence as per Centeral Limit Theorem, the sampling distribution of the mean will approach a normal distribution as the size of the sample increases and becomes large (>30). So it can be assumed, Population distribution is normal.
+•	Observations are independent.
+•	Population standard deviation or the variance is same in both samples.
+•	Level of significance (α) = 0.05, as no specific level of significance has been provided.
+
+```{r echo=FALSE}
+rm(list = ls())
+
+setwd("./Data")
+
+library(xlsx)
+
+golf = read.xlsx("golf.xls",sheetName = "Data")
+
+attach(golf)
+```
+ 
+## Exploratory Data Analysis
+
+```{r}
+str(golf)
+```
+
+Following had been observed for the provided data:
+•	Number of observations: 40
+•	Number of variables: 2 
+•	Names of the variable: Current & New
+•	Current: This variable provides the observations for current golf balls.
+•	New: This variable provides the observations for the new golf ball with coating designed to resist cuts.
+
+# Missing values
+```{r}
+sum(is.na(golf))
+```
+
